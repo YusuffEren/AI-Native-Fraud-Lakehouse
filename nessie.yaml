@@ -1,0 +1,30 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: nessie
+spec:
+  ports:
+    - port: 19120
+      name: http
+  selector:
+    app: nessie
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nessie
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nessie
+  template:
+    metadata:
+      labels:
+        app: nessie
+    spec:
+      containers:
+        - name: nessie
+          image: projectnessie/nessie:0.82.0
+          ports:
+            - containerPort: 19120

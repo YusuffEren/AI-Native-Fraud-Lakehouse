@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: fraud-producer
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: fraud-producer
+  template:
+    metadata:
+      labels:
+        app: fraud-producer
+    spec:
+      containers:
+        - name: producer
+          image: lakehouse/app:latest
+          imagePullPolicy: Never
+          command: ["java", "-cp", "/app/app.jar", "com.lakehouse.FraudDataProducer"]
+          env:
+            - name: KAFKA_BOOTSTRAP
+              value: "my-cluster-kafka-bootstrap:9092"

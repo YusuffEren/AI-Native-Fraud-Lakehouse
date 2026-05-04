@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: fraud-streaming
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: fraud-streaming
+  template:
+    metadata:
+      labels:
+        app: fraud-streaming
+    spec:
+      containers:
+        - name: streaming
+          image: lakehouse/app:latest
+          imagePullPolicy: Never
+          command: ["java", "-cp", "/app/app.jar", "com.lakehouse.LakehouseStreaming"]
+          env:
+            - name: KAFKA_BOOTSTRAP
+              value: "my-cluster-kafka-bootstrap:9092"
+            - name: NESSIE_URI
+              value: "http://nessie:19120/api/v2"
+            - name: MINIO_ENDPOINT
+              value: "http://minio:9000"
